@@ -1,4 +1,4 @@
-# Vania Alici Private Course Repository
+# Vania Alicia Private Course Repository
 =====================================
 ### Table of Contents
 1. [Introduction](#introduction)
