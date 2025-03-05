@@ -3,5 +3,6 @@
     "terminal.integrated.fontSize": 24,
     "window.zoomLevel": -1,
     "editor.fontFamily": "Fira Code",
-    "workbench.colorTheme": "Default Light Modern"
+    "workbench.colorTheme": "Default Light Modern",
+    "editor.fontSize": 24
 }
