@@ -1,91 +1,95 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-// Struktur node BST
+//struct 
 struct Node {
     int data;
     struct Node* left;
     struct Node* right;
 };
-
-// Fungsi untuk membuat node baru
-struct Node* buatNode(int data) {
+//membuat node baru
+struct Node* buatNode(int data){
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    newNode->data = data;
-    newNode->left = NULL;
-    newNode->right = NULL;
-    return newNode;
+        newNode->data = data;
+        newNode->left = NULL;
+        newNode->right = NULL; 
+        return newNode;
+        /* data */    
 }
-
-// Fungsi untuk memasukkan node
-struct Node* insert(struct Node* root, int data) {
-    if(root == NULL) {
+//memasukkan data node 
+struct Node* insert(struct Node* root, int data){
+    //kalau data kosong, memulai node
+    if (root ==  NULL){
         return buatNode(data);
     }
-    if(data < root->data) {
-        root->left = insert(root->left, data);
-    }
-    else if(data > root->data) {
-        root->right = insert(root->right, data);
-    }
+    //data akan diisi dari kiri 
+    if (data < root->data){
+        root->left = insert(root->left,data);
+    } 
+    //kalau data kiri sudah diisi akan geser kanan
+    else if (data > root->data){
+        root->right = insert(root->right,data);
+    }    
+    //return
     return root;
 }
 
-// Fungsi untuk traversal inorder
-void inorderTraversal(struct Node* root) {
-    if(root != NULL) {
-        inorderTraversal(root->left);
+//transversal inorder (urutan data)
+void inorderTransversal(struct Node* root){
+    if (root != NULL){
+        inorderTransversal(root->left);
         printf("%d ", root->data);
-        inorderTraversal(root->right);
+        inorderTransversal(root->right);
     }
 }
 
-// Fungsi pencarian node
-struct Node* search(struct Node* root, int data) {
-    if(root == NULL || root->data == data)
+//function pencarian node
+struct Node* search(struct Node* root, int data){
+    //kalau data kosong, memulai node
+    if (root ==  NULL || root->data == data){
         return root;
-    if(data < root->data)
+    }
+    if (data < root->data){
         return search(root->left, data);
-    else
+    }
+    else{
         return search(root->right, data);
+    }
 }
 
-// Fungsi untuk menghapus node
-struct Node* deleteNode(struct Node* root, int data) {
-    if(root == NULL) return root;
+//function delete node 
+struct Node* delete(struct Node* root, int data){
+    //kalau data kosong, memulai node
+    if (root ==  NULL) return root;
     
-    if(data < root->data)
-        root->left = deleteNode(root->left, data);
-    else if(data > root->data)
-        root->right = deleteNode(root->right, data);
-    else {
-        // Node dengan satu anak atau tanpa anak
-        if(root->left == NULL) {
-            struct Node* temp = root->right;
+    if (data < root->data){
+        root ->left = delete(root->left, data);
+    } else if (data > root->data){
+        root ->right = delete(root->right, data);
+    }
+    else{
+        if (root->left == NULL){
+            struct Node* temp =root->right;
+            free(root);
+            return temp;
+        } 
+        else if(root->right == NULL){
+            struct Node* temp =root->left;
             free(root);
             return temp;
         }
-        else if(root->right == NULL) {
-            struct Node* temp = root->left;
-            free(root);
-            return temp;
-        }
-        
-        // Node dengan dua anak: cari penerus inorder (nilai terkecil di subtree kanan)
-        struct Node* temp = root->right;
-        while(temp->left != NULL)
-            temp = temp->left;
-        
+        struct Node* temp = root->right; //menunjuk bagian kanan dari root, disimpan kedalam tempoprary variabel
+        while (temp->left != NULL) //untuk mencari node terkecil di tree 
+            temp = temp->left; //node terkecil ditemukan dan dia disalin (succersor in order)
         root->data = temp->data;
-        root->right = deleteNode(root->right, temp->data);
+        root->right = delete(root->right, temp->data); //node dihapus
+
     }
     return root;
 }
+//main function
 
-int main() {
+int main(){
     struct Node* root = NULL;
-    
-    // Membangun BST
     root = insert(root, 50);
     insert(root, 30);
     insert(root, 20);
@@ -94,24 +98,20 @@ int main() {
     insert(root, 60);
     insert(root, 80);
     
-    // Traversal inorder (hasil terurut)
-    printf("Traversal inorder: ");
-    inorderTraversal(root);
-    printf("\n");
-    
-    // Pencarian node
+    inorderTransversal(root);
+
     int cari = 60;
-    struct Node* hasil = search(root, cari);
-    if(hasil != NULL)
-        printf("Node %d ditemukan\n", cari);
-    else
-        printf("Node %d tidak ditemukan\n", cari);
-    
-    // Menghapus node
-    root = deleteNode(root, 20);
-    printf("Setelah menghapus 20: ");
-    inorderTraversal(root);
-    printf("\n");
-    
+    struct Node* result = search(root, cari);
+    if (result != NULL){
+        printf("\nData %d ditemukan di dalam tree", cari);
+    } 
+    else {
+        printf("\nData %d tidak ditemukan di dalam tree", cari);
+    }
+    //menghapus node r
+    // root = delete(root, 20);    
+    // printf("Setelah menghapus 20 : ");
+    // inorderTransversal(root);
+    // printf("\n");
     return 0;
 }
